@@ -13,10 +13,19 @@ public class Patient {
     private String patientBloodType; 
     private String patientPhone;
     private Date patientBirthDate;
-    private Date patientLastPeriod;
-    private int pregnancyWeek;
+    private String patientLastPeriod;
+    private Double pregnancyWeek;
     private boolean active;
-        
+    private Historic historic;
+
+    public Historic getHistoric() {
+        return historic;
+    }
+
+    public void setHistoric(Historic historic) {
+        this.historic = historic;
+    }
+       
     public Patient() {
     }
 
@@ -60,11 +69,11 @@ public class Patient {
         this.patientPhone = patientPhone;
     }
 
-    public Date getPatientLastPeriod() {
+    public String getPatientLastPeriod() {
         return patientLastPeriod;
     }
 
-    public void setPatientLastPeriod(Date patientLastPeriod) {
+    public void setPatientLastPeriod(String patientLastPeriod) {
         this.patientLastPeriod = patientLastPeriod;
     }
 
@@ -84,11 +93,11 @@ public class Patient {
         this.active = active;
     }
 
-    public int getPregnancyWeek() {
+    public Double getPregnancyWeek() {
         return pregnancyWeek;
     }
 
-    public void setPregnancyWeek(int pregnancyWeek) {
+    public void setPregnancyWeek(Double pregnancyWeek) {
         this.pregnancyWeek = pregnancyWeek;
     }
    
