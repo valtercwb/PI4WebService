@@ -14,7 +14,8 @@ public class Patient {
     private String patientPhone;
     private Date patientBirthDate;
     private Date patientLastPeriod;
-    private boolean patientStatus;
+    private int pregnancyWeek;
+    private boolean active;
         
     public Patient() {
     }
@@ -67,20 +68,28 @@ public class Patient {
         this.patientLastPeriod = patientLastPeriod;
     }
 
-    public boolean isPatientStatus() {
-        return patientStatus;
-    }
-
-    public void setPatientStatus(boolean patientStatus) {
-        this.patientStatus = patientStatus;
-    }
-
     public Date getPatientBirthDate() {
         return patientBirthDate;
     }
 
     public void setPatientBirthDate(Date patientBirthDate) {
         this.patientBirthDate = patientBirthDate;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public int getPregnancyWeek() {
+        return pregnancyWeek;
+    }
+
+    public void setPregnancyWeek(int pregnancyWeek) {
+        this.pregnancyWeek = pregnancyWeek;
     }
    
 }

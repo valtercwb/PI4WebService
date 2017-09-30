@@ -12,7 +12,7 @@ import org.me.pi4.modeldao.PatientDAO;
  * @author valter.franco
  */
 
-@Path("patient")
+@Path("patienttest")
 public class PatientWs {
     
     @GET
