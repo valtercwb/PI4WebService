@@ -16,7 +16,7 @@ import org.me.pi4.modeldao.PatientDAO;
  */
 
 @Path("patient")
-public class PatientResource {
+public class PatientResource{
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)

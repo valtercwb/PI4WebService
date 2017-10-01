@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.me.pi4.database.DbConnection;
 import org.me.pi4.model.Historic;
 import org.me.pi4.model.Patient;
+import org.me.util.AppUtil;
 
 /**
  * @author 2016203311
@@ -36,19 +37,34 @@ public class PatientDAO extends DAO {
 
         stm = con.createStatement();
         ResultSet resultado = stm.executeQuery(
-                "SELECT *,DATEDIFF(now(),pac_dum)/7 as semana_gestacao FROM appdatabase.paciente a \n"
-                + "inner join appdatabase.historico_medico b\n"
-                + "on a.pac_id = b.his_paciente where pac_id=" + patientId
-        );
+          "SELECT a.pac_id,a.pac_codigo,a.pac_nome,a.pac_telefone,a.pac_email,\n"
+        + "a.pac_nasc,Floor(DATEDIFF(now(),a.pac_nasc)/365) as pac_idade,\n" 
+        + "a.pac_risco,a.pac_planejada,a.pac_status,a.pac_dum,DATEDIFF(now(),pac_dum)/7 as semana_gestacao,\n"
+        + "c.sangue_nome as sangue_paciente,d.sangue_nome as conjuge_sangue,\n" 
+        + "b.anomalia,b.cardiopatia,b.clamidia,b.diabetes,b.doenca_mental,b.gonorreia,\n"
+        + "b.hiv,b.neoplasia,b.sifilis,b.tromboembolismo FROM appdatabase.paciente a \n" 
+        + "inner join appdatabase.historico_medico b \n" 
+        + "on a.pac_id = b.his_paciente \n" 
+        + "Inner join appdatabase.tipo_sanguineo c\n" 
+        + "On a.pac_tipo_sangue = c.sangue_id \n" 
+        + "Inner join appdatabase.tipo_sanguineo d \n" 
+        + "On a.pac_conj_sangue = d.sangue_id where a.pac_id=" + patientId );
 
         if (resultado.next()) {
             p = new Patient();
-            p.setPatientName(resultado.getString("pac_nome"));
-            p.setPatientBloodType(resultado.getString("pac_tipo_sangue"));
             p.setPatientId(resultado.getInt("pac_id"));
             p.setPatientCod(resultado.getInt("pac_codigo"));
-            p.setPatientLastPeriod(dateFortmat(resultado.getDate("pac_dum")));
+            p.setPatientName(resultado.getString("pac_nome"));
+            p.setPatientPhone(resultado.getString("pac_telefone"));
+            p.setPatientEmail(resultado.getString("pac_email"));
+            p.setPatientBloodType(resultado.getString("sangue_paciente"));
+            p.setPartnerBloodType(resultado.getString("conjuge_sangue"));
+            p.setPatientAge(resultado.getInt("pac_idade"));
+            if(!resultado.getDate("pac_dum").toString().isEmpty())
+            p.setPatientLastPeriod(AppUtil.DateFormat(resultado.getDate("pac_dum")));
             p.setPregnancyWeek(Math.ceil(resultado.getDouble("semana_gestacao")));
+            p.setPlanned(resultado.getBoolean("pac_planejada"));
+            p.setRisk(resultado.getBoolean("pac_risco"));
             p.setActive(resultado.getBoolean("pac_status"));
             h = new Historic();
             h.setDiabetes(resultado.getBoolean("diabetes"));
@@ -87,18 +103,12 @@ public class PatientDAO extends DAO {
             p.setPatientBloodType(resultado.getString("pac_tipo_sangue"));
             p.setPatientId(resultado.getInt("pac_id"));
             p.setPatientCod(resultado.getInt("pac_codigo"));
-            p.setPatientLastPeriod(dateFortmat(resultado.getDate("pac_dum")));
+            p.setPatientLastPeriod(AppUtil.DateFormat(resultado.getDate("pac_dum")));
             p.setPregnancyWeek(Math.ceil(resultado.getDouble("semana_gestacao")));
             p.setActive(resultado.getBoolean("pac_status"));
             
             pl.add(p);
         }
         return pl;
-    }
-
-    public static String dateFortmat(Date dt) {
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-        String dateTime = sdf.format(dt);
-        return dateTime;
     }
 }

@@ -10,12 +10,17 @@ public class Patient {
     private int patientId;
     private int patientCod;
     private String patientName;
-    private String patientBloodType; 
     private String patientPhone;
+    private String patientEmail;
     private Date patientBirthDate;
+    private int PatientAge;
+    private String patientBloodType;
+    private String partnerBloodType;
     private String patientLastPeriod;
     private Double pregnancyWeek;
     private boolean active;
+    private boolean planned;
+    private boolean risk;
     private Historic historic;
 
     public Historic getHistoric() {
@@ -100,5 +105,46 @@ public class Patient {
     public void setPregnancyWeek(Double pregnancyWeek) {
         this.pregnancyWeek = pregnancyWeek;
     }
+
+    public String getPatientEmail() {
+        return patientEmail;
+    }
+
+    public void setPatientEmail(String patientEmail) {
+        this.patientEmail = patientEmail;
+    }
+
+    public int getPatientAge() {
+        return PatientAge;
+    }
+
+    public void setPatientAge(int PatientAge) {
+        this.PatientAge = PatientAge;
+    }
+
+    public String getPartnerBloodType() {
+        return partnerBloodType;
+    }
+
+    public void setPartnerBloodType(String partnerBloodType) {
+        this.partnerBloodType = partnerBloodType;
+    }
+
+    public boolean isPlanned() {
+        return planned;
+    }
+
+    public void setPlanned(boolean planned) {
+        this.planned = planned;
+    }
+
+    public boolean isRisk() {
+        return risk;
+    }
+
+    public void setRisk(boolean risk) {
+        this.risk = risk;
+    }
+    
    
 }
