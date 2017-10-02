@@ -1,7 +1,5 @@
 package org.me.pi4.model;
 
-import java.sql.Date;
-
 /**
  * @author 2016203311
  */

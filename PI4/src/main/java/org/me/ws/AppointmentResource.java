@@ -31,9 +31,10 @@ public class AppointmentResource {
     
     @GET
     @Path("/{appointmentId}")
-    public Appointment GetAppointment(@PathParam("appointmentId") int appointmentId) throws SQLException {
+    public Appointment GetAppointment(@PathParam("patientId") int patientId,
+                                      @PathParam("appointmentId") int appointmentId) throws SQLException {
         
-    Appointment a = AppointmentDAO.GetAppointment(appointmentId);  
+    Appointment a = AppointmentDAO.GetAppointment(patientId,appointmentId);  
     return a;
     }
     
