@@ -91,7 +91,7 @@ public class PatientDAO extends DAO {
         Statement stm = null;
 
         stm = con.createStatement();
-        ResultSet resultado = stm.executeQuery("SELECT *,DATEDIFF(now(),pac_dum)/7 as semana_gestacao \n"
+        ResultSet resultado = stm.executeQuery("SELECT *,Floor(DATEDIFF(now(),a.pac_nasc)/365) as pac_idade,DATEDIFF(now(),pac_dum)/7 as semana_gestacao \n"
                 + "FROM appdatabase.paciente a\n"
                 + "inner join appdatabase.historico_medico b\n"
                 + "on a.pac_id = b.his_paciente");
@@ -106,6 +106,7 @@ public class PatientDAO extends DAO {
             p.setPatientLastPeriod(AppUtil.DateFormat(resultado.getDate("pac_dum")));
             p.setPregnancyWeek(Math.ceil(resultado.getDouble("semana_gestacao")));
             p.setActive(resultado.getBoolean("pac_status"));
+            p.setPatientAge(resultado.getInt("pac_idade"));
             
             pl.add(p);
         }
