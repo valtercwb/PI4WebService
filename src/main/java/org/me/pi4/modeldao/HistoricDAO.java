@@ -7,7 +7,7 @@ package org.me.pi4.modeldao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
 import org.me.pi4.model.Historic;
 import org.me.pi4.model.Patient;
 
@@ -32,7 +32,7 @@ public class HistoricDAO extends DAO{
      return 0;
      }
      
-     public static void getUser(Connection conector, ObservableList<Historic> list) {
+     public static void getUser(Connection conector) {
      }
     
 }
