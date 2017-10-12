@@ -24,55 +24,26 @@ public class UserDAO extends DAO {
         super();
     }
 
-    public User autenticarUsername(String login) {
-
-       DbConnection.instancia();
-       Connection con = DbConnection.instancia().getConnection();
-        User u = null;
-       try {
-
-            String sql = "SELECT * FROM usuario WHERE usu_codigo = ?  ";
-            pst = con.prepareStatement(sql);
-            pst.setString(1, login);
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                if(login.equals(rs.getInt(1))){
-                u.setUserName(rs.getString("usu_nome"));
-                u.setUserCode(rs.getString("usu_codigo"));
-                }
-                return u;
-            }
-            pst.close();
-            rs.close();
-        } catch (SQLException ex) {
-
-        }
-        return null;
-        
-    }
-
     public User AuthUser(String login, String senha) {
        
        DbConnection.instancia();
        Connection con = DbConnection.instancia().getConnection();
        User u = new User();
-        System.out.println(senha);
 
-        //String chave = Cryptography.convert(senha);
-        System.out.println(senha);//chave
+        String chave = Cryptography.convert(senha);
 
         try {
 
-            String sql = "SELECT usu_codigo, usu_senha, usu_nome FROM appdatabase.usuario WHERE usu_codigo=? AND usu_senha=?";
+            String sql = "SELECT * FROM appdatabase.usuario WHERE usu_codigo=? AND usu_senha=?";
             pst = con.prepareStatement(sql);
             pst.setString(1, login);
-            pst.setString(2, senha);//chave
+            pst.setString(2, chave);
             rs = pst.executeQuery();
             while (rs.next()) {
-                if(rs.getString(1).equals(login) && rs.getString(2).equals(senha)){
                 u.setUserCode(rs.getString("usu_codigo"));
                 u.setUserName(rs.getString("usu_nome"));
-                }
+                u.setUserPassword(rs.getString("usu_senha"));
+                u.setUserType(rs.getInt("usu_tipo"));
                 return u;
             }
             pst.close();
