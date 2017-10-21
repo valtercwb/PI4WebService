@@ -1,24 +1,33 @@
 package org.me.pi4.model;
 
+import java.util.Date;
+
 /**
- *
  * @author valter.franco
  */
+
 public class Exam {
     
     private int examId;
     private int examPatient;
-    private String examDoctor;
     private String examReason;
-    private int examMedia;
-    private String examDate;
+    private String examObs;
+    private String examMedia;
+    private Date examDate;
+    private String examMedico;
+    private String examType;
     private String examPlace;
-
-    public Exam() {
-    }
-
+    
     public int getExamId() {
         return examId;
+    }
+
+    public String getExamPlace() {
+        return examPlace;
+    }
+
+    public void setExamPlace(String examPlace) {
+        this.examPlace = examPlace;
     }
 
     public void setExamId(int examId) {
@@ -33,14 +42,6 @@ public class Exam {
         this.examPatient = examPatient;
     }
 
-    public String getExamDoctor() {
-        return examDoctor;
-    }
-
-    public void setExamDoctor(String examDoctor) {
-        this.examDoctor = examDoctor;
-    }
-
     public String getExamReason() {
         return examReason;
     }
@@ -49,30 +50,44 @@ public class Exam {
         this.examReason = examReason;
     }
 
-    public int getExamMedia() {
+    public String getExamObs() {
+        return examObs;
+    }
+
+    public void setExamObs(String examObs) {
+        this.examObs = examObs;
+    }
+
+    public String getExamMedia() {
         return examMedia;
     }
 
-    public void setExamMedia(int examMedia) {
+    public void setExamMedia(String examMedia) {
         this.examMedia = examMedia;
     }
 
-    public String getExamDate() {
+    public Date getExamDate() {
         return examDate;
     }
 
-    public void setExamDate(String examDate) {
+    public void setExamDate(Date examDate) {
         this.examDate = examDate;
     }
 
-    public String getExamPlace() {
-        return examPlace;
+    public String getExamMedico() {
+        return examMedico;
     }
 
-    public void setExamPlace(String examPlace) {
-        this.examPlace = examPlace;
+    public void setExamMedico(String examMedico) {
+        this.examMedico = examMedico;
     }
-    
-    
-    
+
+    public String getExamType() {
+        return examType;
+    }
+
+    public void setExamType(String examType) {
+        this.examType = examType;
+    }
+   
 }
