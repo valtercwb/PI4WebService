@@ -2,7 +2,6 @@ package org.me.pi4.database;
 
 import org.me.pi4.modeldao.AppointmentDAO;
 import org.me.pi4.modeldao.DoctorDAO;
-import org.me.pi4.modeldao.HistoricDAO;
 import org.me.pi4.modeldao.PatientDAO;
 import org.me.pi4.modeldao.UserDAO;
 
@@ -19,8 +18,7 @@ public class DaoController {
     private final PatientDAO patientDAO = new PatientDAO();
     private final AppointmentDAO appointmentDAO = new AppointmentDAO();
     private final DoctorDAO doctorDAO = new DoctorDAO();
-    private final HistoricDAO historicDAO = new HistoricDAO();
-
+    
     public static DaoController getBanco() {
         return banco;
     }

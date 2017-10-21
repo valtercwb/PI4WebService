@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import org.me.pi4.database.DbConnection;
+import org.me.pi4.database.DbPostgre;
 import org.me.pi4.model.Appointment;
 import org.me.pi4.model.Doctor;
 import org.me.pi4.model.Patient;
@@ -22,25 +23,25 @@ public class AppointmentDAO extends DAO {
 
     public static Appointment GetAppointment(int patientId, int appointmentId) throws SQLException {
 
-        DbConnection.instancia();
-        Connection con = DbConnection.instancia().getConnection();
+        DbPostgre.instancia();
+        Connection con = DbPostgre.instancia().getConnection();
         Appointment a = null;
         Doctor d;
         Patient p;
         Statement stm = null;
 
         stm = con.createStatement();
-        ResultSet resultado = stm.executeQuery("SELECT b.con_id,b.FK_pac_id as pac_id, a.pac_nome,\n"
-                + "Floor(DATEDIFF(now(),a.pac_nasc)/365) as pac_idade,DATEDIFF(now(),\n"
-                + "b.con_data)/7 as semana_gestacao, c.med_nome as medico,\n"
-                + "b.con_data,b.con_desc as descricao,\n"
-                + "Truncate(b.con_peso/(pow(a.pac_altura,2)),1) as imc,b.con_alt_uterina as altura_uterina,\n"
-                + "b.con_bati_feto as batimento_feto,\n"
-                + "b.con_peso as peso,b.con_pressao as pressao FROM appdatabase.paciente a \n"
-                + "Inner join appdatabase.consulta b \n"
-                + "On a.pac_id = b.FK_pac_id \n"
-                + "inner join appdatabase.medico c \n"
-                + "On b.FK_med_id = c.med_id where a.pac_id='" + patientId + "' and b.con_id=" + appointmentId);
+        ResultSet resultado = stm.executeQuery("SELECT b.con_id,b.FK_pac_id as pac_id, a.pac_nome,\n" +
+        "DATE_PART('year', now()) - DATE_PART('year', pac_nasc) as pac_idade,\n" +
+        "TRUNC(DATE_PART('day', now() - pac_dum)/7) as semana_gestacao, c.med_nome as medico,\n" +
+        "b.con_data,b.con_desc as descricao,\n" +
+        "cast(b.con_peso as numeric)/(POWER(a.pac_altura,2)) as imc,b.con_alt_uterina as altura_uterina,\n" +
+        "b.con_bati_feto as batimento_feto,\n" +
+        "b.con_peso as peso,b.con_pressao as pressao FROM paciente a \n" +
+        "Inner join consulta b \n" +
+        "On a.pac_id = b.FK_pac_id \n" +
+        "inner join medico c \n" +
+        "On b.FK_med_id = c.med_id where a.pac_id='" + patientId + "' and b.con_id=" + appointmentId);
 
         if (resultado.next()) {
             d = new Doctor();
@@ -82,23 +83,23 @@ public class AppointmentDAO extends DAO {
 
     public static ArrayList<Appointment> GetAllAppointments(int pacientId) throws SQLException {
         ArrayList<Appointment> ap = new ArrayList<>();
-        DbConnection.instancia();
-        Connection con = DbConnection.instancia().getConnection();
+        DbPostgre.instancia();
+        Connection con = DbPostgre.instancia().getConnection();
         Appointment a = null;
         Doctor d;
 
         Statement stm = null;
 
         stm = con.createStatement();
-        ResultSet resultado = stm.executeQuery("SELECT b.con_id,b.FK_pac_id as pac_id, c.med_nome as medico,\n"
-                + "b.con_data,b.con_desc as descricao,\n"
-                + "Truncate(b.con_peso/(pow(a.pac_altura,2)),1) as imc,b.con_alt_uterina as altura_uterina,\n"
-                + "b.con_bati_feto as batimento_feto,\n"
-                + "b.con_peso as peso,b.con_pressao as pressao FROM appdatabase.paciente a \n"
-                + "Inner join appdatabase.consulta b\n"
-                + "On a.pac_id = b.FK_pac_id \n"
-                + "inner join appdatabase.medico c \n"
-                + "On b.FK_med_id = c.med_id where pac_id =" + pacientId);
+        ResultSet resultado = stm.executeQuery("SELECT b.con_id,b.FK_pac_id as pac_id, c.med_nome as medico,\n" +
+        "b.con_data,b.con_desc as descricao,\n" +
+        "cast(b.con_peso as numeric)/(POWER(a.pac_altura,2)) as imc,b.con_alt_uterina as altura_uterina,\n" +
+        "b.con_bati_feto as batimento_feto,\n" +
+        "b.con_peso as peso,b.con_pressao as pressao FROM paciente a \n" +
+        "Inner join consulta b\n" +
+        "On a.pac_id = b.FK_pac_id \n" +
+        "inner join medico c \n" +
+        "On b.FK_med_id = c.med_id where a.pac_id=" + pacientId);
 
         while (resultado.next()) {
 

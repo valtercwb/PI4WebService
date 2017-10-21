@@ -1,12 +1,11 @@
 package org.me.pi4.modeldao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import org.me.pi4.database.DbConnection;
+import org.me.pi4.database.DbPostgre;
 import org.me.pi4.model.Historic;
 import org.me.pi4.model.Patient;
 import org.me.util.AppUtil;
@@ -29,26 +28,21 @@ public class PatientDAO extends DAO {
 
     public static Patient GetPatient(int patientId) throws SQLException {
 
-        DbConnection.instancia();
-        Connection con = DbConnection.instancia().getConnection();
+        DbPostgre.instancia();
+        Connection con = DbPostgre.instancia().getConnection();
         Patient p = null;
         Historic h = null;
         Statement stm = null;
 
         stm = con.createStatement();
         ResultSet resultado = stm.executeQuery(
-          "SELECT a.pac_id,a.pac_codigo,a.pac_nome,a.pac_telefone,a.pac_email,\n"
-        + "a.pac_nasc,Floor(DATEDIFF(now(),a.pac_nasc)/365) as pac_idade,\n" 
-        + "a.pac_risco,a.pac_planejada,a.pac_status,a.pac_dum,DATEDIFF(now(),pac_dum)/7 as semana_gestacao,\n"
-        + "c.sangue_nome as sangue_paciente,d.sangue_nome as conjuge_sangue,\n" 
-        + "b.anomalia,b.cardiopatia,b.clamidia,b.diabetes,b.doenca_mental,b.gonorreia,\n"
-        + "b.hiv,b.neoplasia,b.sifilis,b.tromboembolismo FROM appdatabase.paciente a \n" 
-        + "inner join appdatabase.historico_medico b \n" 
-        + "on a.pac_id = b.his_paciente \n" 
-        + "Inner join appdatabase.tipo_sanguineo c\n" 
-        + "On a.pac_tipo_sangue = c.sangue_id \n" 
-        + "Inner join appdatabase.tipo_sanguineo d \n" 
-        + "On a.pac_conj_sangue = d.sangue_id where a.pac_id=" + patientId );
+        "SELECT pac_id,pac_codigo,pac_nome,pac_telefone,pac_email,\n"
+        +"pac_nasc,DATE_PART('year', now()) - DATE_PART('year', pac_nasc) as pac_idade,\n"
+        +"pac_risco,pac_planejada,pac_status,pac_dum,TRUNC(DATE_PART('day', now() - pac_dum)/7) as semana_gestacao,\n"
+        +"pac_tipo_sangue,pac_conj_sangue,\n"
+        +"anomalia,cardiopatia,clamidia,diabetes,doenca_mental,gonorreia,\n"
+        +"hiv,neoplasia,sifilis,tromboembolismo FROM paciente a \n" 
+        +"where pac_id = " + patientId );
 
         if (resultado.next()) {
             p = new Patient();
@@ -66,35 +60,33 @@ public class PatientDAO extends DAO {
             p.setPlanned(resultado.getBoolean("pac_planejada"));
             p.setRisk(resultado.getBoolean("pac_risco"));
             p.setActive(resultado.getBoolean("pac_status"));
-            h = new Historic();
-            h.setDiabetes(resultado.getBoolean("diabetes"));
-            h.setHiv(resultado.getBoolean("hiv"));
-            h.setSifilis(resultado.getBoolean("sifilis"));
-            h.setGonorreia(resultado.getBoolean("gonorreia"));
-            h.setClamidia(resultado.getBoolean("clamidia"));
-            h.setNeoplasia(resultado.getBoolean("neoplasia"));
-            h.setDoencaMental(resultado.getBoolean("doenca_mental"));
-            h.setCardiopatia(resultado.getBoolean("cardiopatia"));
-            h.setAnomalia(resultado.getBoolean("anomalia"));
-            h.setTromboembo(resultado.getBoolean("tromboembolismo"));
-            p.setHistoric(h);
+            p.setDiabetes(resultado.getBoolean("diabetes"));
+            p.setHiv(resultado.getBoolean("hiv"));
+            p.setSifilis(resultado.getBoolean("sifilis"));
+            p.setGonorreia(resultado.getBoolean("gonorreia"));
+            p.setClamidia(resultado.getBoolean("clamidia"));
+            p.setNeoplasia(resultado.getBoolean("neoplasia"));
+            p.setDoencaMental(resultado.getBoolean("doenca_mental"));
+            p.setCardiopatia(resultado.getBoolean("cardiopatia"));
+            p.setAnomalia(resultado.getBoolean("anomalia"));
+            p.setTromboembo(resultado.getBoolean("tromboembolismo"));
         }
         return p;
     }
 
     public static ArrayList<Patient> GetAllPatients() throws SQLException {
         ArrayList<Patient> pl = new ArrayList<>();
-        DbConnection.instancia();
-        Connection con = DbConnection.instancia().getConnection();
+        DbPostgre.instancia();
+        Connection con = DbPostgre.instancia().getConnection();
         Patient p = null;
         
         Statement stm = null;
 
         stm = con.createStatement();
-        ResultSet resultado = stm.executeQuery("SELECT *,Floor(DATEDIFF(now(),a.pac_nasc)/365) as pac_idade,DATEDIFF(now(),pac_dum)/7 as semana_gestacao \n"
-                + "FROM appdatabase.paciente a\n"
-                + "inner join appdatabase.historico_medico b\n"
-                + "on a.pac_id = b.his_paciente");
+        ResultSet resultado = stm.executeQuery(
+            "SELECT *,DATE_PART('year', now()) - DATE_PART('year', pac_nasc) as pac_idade,\n" 
+            +"TRUNC(DATE_PART('day', now() - pac_dum)/7) as semana_gestacao\n" 
+            +"FROM paciente");
 
         while (resultado.next()) {
 

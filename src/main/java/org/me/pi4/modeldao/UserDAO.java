@@ -176,39 +176,4 @@ public class UserDAO extends DAO {
         }
         return isUniqCode;
     }
-
-    public static void getUser(Connection conector, ArrayList<User> list) {
-
-        try {
-            Statement stm = conector.createStatement();
-            ResultSet resultado = stm.executeQuery(
-                    "SELECT A.usu_codigo,"
-                    + "A.usu_nome, "
-                    + "A.usu_login, "
-                    + "C.tipo_usu_nome "
-                    + "FROM sistemabrasduto.usuario A "
-                    + "INNER JOIN usuario_status B "
-                    + "ON (A.usu_status = B.usu_sta_codigo) "
-                    + "INNER JOIN tipo_usuario C "
-                    + "ON (A.usu_tipo = C.tipo_usu_codigo) "
-            );
-
-            while (resultado.next()) {
-                list.add(
-                        new User( //                      resultado.getInt("usu_codigo"),
-                        //                                resultado.getString("usu_nome"),
-                        //                                resultado.getString("usu_login"),
-                        //                                resultado.getString("usu_senha")//,
-                        //                                new UserStatus(resultado.getInt("usu_status"),
-                        //                                resultado.getString("usu_sta_nome")),
-                        //                                new UserType(resultado.getInt("usu_tipo"),
-                        //                                        resultado.getString("tipo_usu_nome")))
-                        ));
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
 }
