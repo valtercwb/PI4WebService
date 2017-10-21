@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.me.pi4.database.DbConnection;
+import org.me.pi4.database.DbPostgre;
 import org.me.pi4.model.Patient;
 import org.me.pi4.model.User;
 import org.me.util.Cryptography;
@@ -43,6 +44,37 @@ public class UserDAO extends DAO {
                 u.setUserCode(rs.getString("usu_codigo"));
                 u.setUserName(rs.getString("usu_nome"));
                 u.setUserPassword(rs.getString("usu_senha"));
+                u.setUserType(rs.getInt("usu_tipo"));
+                return u;
+            }
+            pst.close();
+            rs.close();
+
+        } catch (SQLException ex) {
+        }
+        return null;
+    }
+    
+    public User AuthUserPostgre(String login, String senha) {
+       
+       DbPostgre.instancia();
+       
+       Connection con = DbPostgre.instancia().getConnection();
+       User u = new User();
+
+        //String chave = Cryptography.convert(senha);
+
+        try {
+
+            String sql = "SELECT * FROM usuario WHERE usu_login=? AND usu_password=?";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, login);
+            pst.setString(2, senha);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                u.setUserCode(rs.getString("usu_login"));
+                u.setUserName(rs.getString("usu_name"));
+                u.setUserPassword(rs.getString("usu_password"));
                 u.setUserType(rs.getInt("usu_tipo"));
                 return u;
             }

@@ -34,7 +34,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public User Login (@HeaderParam("userLogin") String userLogin, @HeaderParam("userPass") String userPass) {
         
-    User u = new UserDAO().AuthUser(userLogin, userPass);
+    User u = new UserDAO().AuthUserPostgre(userLogin, userPass);
     return u;
     }
     
