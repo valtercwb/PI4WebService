@@ -40,7 +40,8 @@ public class ExamDAO extends DAO {
 
         if (resultado.next()) {
             e = new Exam();
-            e.setExamPatient(resultado.getInt("exam_paciente"));
+            e.setExamId(resultado.getInt("exa_id"));
+            e.setExamPatient(resultado.getInt("exa_paciente"));
             e.setExamReason(resultado.getString("exa_motivo"));
             e.setExamMedia(resultado.getString("exa_media"));
             e.setExamPlace(resultado.getString("exa_local"));
@@ -78,7 +79,8 @@ public class ExamDAO extends DAO {
 
         while (resultado.next()) {
             e = new Exam();
-            e.setExamPatient(resultado.getInt("exam_paciente"));
+            e.setExamId(resultado.getInt("exa_id"));
+            e.setExamPatient(resultado.getInt("exa_paciente"));
             e.setExamReason(resultado.getString("exa_motivo"));
             e.setExamMedia(resultado.getString("exa_media"));
             e.setExamPlace(resultado.getString("exa_local"));
