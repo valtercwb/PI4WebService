@@ -2,17 +2,13 @@
 package org.me.pi4.modeldao;
 
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import org.me.pi4.database.DbPostgre;
 import org.me.pi4.model.Appointment;
-import org.me.pi4.model.Doctor;
 import org.me.pi4.model.Exam;
-import org.me.pi4.model.Patient;
 import org.me.util.AppUtil;
 
 /**
@@ -47,7 +43,7 @@ public class ExamDAO extends DAO {
             e.setExamPlace(resultado.getString("exa_local"));
             e.setExamMedico(resultado.getString("exa_medico"));
             e.setExamObs(resultado.getString("exa_tipo"));
-            e.setExamDate(resultado.getDate("exa_data"));
+            e.setExamDate(AppUtil.DateFormat(resultado.getDate("exa_data")));
             e.setExamObs(resultado.getString("exa_observacoes"));
         }
         return e;
@@ -86,7 +82,7 @@ public class ExamDAO extends DAO {
             e.setExamPlace(resultado.getString("exa_local"));
             e.setExamMedico(resultado.getString("exa_medico"));
             e.setExamObs(resultado.getString("exa_tipo"));
-            e.setExamDate(resultado.getDate("exa_data"));
+            e.setExamDate(AppUtil.DateFormat(resultado.getDate("exa_data")));
             e.setExamObs(resultado.getString("exa_observacoes"));
             examList.add(e);
         }

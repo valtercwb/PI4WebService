@@ -1,6 +1,6 @@
 package org.me.pi4.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * @author valter.franco
@@ -13,7 +13,7 @@ public class Exam {
     private String examReason;
     private String examObs;
     private String examMedia;
-    private Date examDate;
+    private String examDate;
     private String examMedico;
     private String examType;
     private String examPlace;
@@ -66,11 +66,11 @@ public class Exam {
         this.examMedia = examMedia;
     }
 
-    public Date getExamDate() {
+    public String getExamDate() {
         return examDate;
     }
 
-    public void setExamDate(Date examDate) {
+    public void setExamDate(String examDate) {
         this.examDate = examDate;
     }
 
