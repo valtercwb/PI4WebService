@@ -51,8 +51,8 @@ public class PatientDAO extends DAO {
             p.setPatientName(resultado.getString("pac_nome"));
             p.setPatientPhone(resultado.getString("pac_telefone"));
             p.setPatientEmail(resultado.getString("pac_email"));
-            p.setPatientBloodType(resultado.getString("sangue_paciente"));
-            p.setPartnerBloodType(resultado.getString("conjuge_sangue"));
+            p.setPatientBloodType(resultado.getString("pac_tipo_sangue"));
+            p.setPartnerBloodType(resultado.getString("pac_conj_sangue"));
             p.setPatientAge(resultado.getInt("pac_idade"));
             if(!resultado.getDate("pac_dum").toString().isEmpty())
             p.setPatientLastPeriod(AppUtil.DateFormat(resultado.getDate("pac_dum")));

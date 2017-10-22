@@ -17,7 +17,7 @@ import org.me.pi4.modeldao.AppointmentDAO;
  * @author valter.franco
  */
 
-@Path("patient/appointments/{patientId}")
+@Path("patient/appointment/{patientId}")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AppointmentResource {
