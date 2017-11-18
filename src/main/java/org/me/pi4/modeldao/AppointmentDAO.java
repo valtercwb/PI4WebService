@@ -5,9 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.me.pi4.database.DbConnection;
 import org.me.pi4.database.DbPostgre;
 import org.me.pi4.model.Appointment;
+import org.me.pi4.model.Attendance;
 import org.me.pi4.model.Doctor;
 import org.me.pi4.model.Patient;
 import org.me.util.AppUtil;
@@ -123,5 +126,81 @@ public class AppointmentDAO extends DAO {
         }
         return ap;
     }
+    
+     public static ArrayList<Attendance> GetAllAvailableAppointments() throws SQLException {
+        ArrayList<Attendance> ap = new ArrayList<>();
+        DbPostgre.instancia();
+        Connection con = DbPostgre.instancia().getConnection();
+        Attendance a = null;
+   
+        Statement stm = null;
+
+        stm = con.createStatement();
+        ResultSet resultado = stm.executeQuery("SELECT con_id, fk_pac_id, fk_med_id, con_desc, con_data, con_hora\n" +
+"	FROM public.consulta where con_data > now();");
+
+        while (resultado.next()) {
+
+           a = new Attendance();
+     
+            a.setAttendanceId(resultado.getInt("con_id"));
+            a.setAttendancePatientId(resultado.getInt("fk_pac_id"));
+            a.setAttendanceDocId(resultado.getInt("fk_med_id"));
+            a.setAttendanceDate(AppUtil.DateFormat(resultado.getDate("con_data")));
+            a.setAttendanceHour(resultado.getString("con_hora"));
+            ap.add(a);
+        }
+        return ap;
+    }
+     
+     public static ArrayList<Attendance> GetAllScheduledAppointments() throws SQLException {
+        ArrayList<Attendance> ap = new ArrayList<>();
+        DbPostgre.instancia();
+        Connection con = DbPostgre.instancia().getConnection();
+        Attendance a = null;
+   
+        Statement stm = null;
+
+        stm = con.createStatement();
+        ResultSet resultado = stm.executeQuery("SELECT con_id, fk_pac_id, fk_med_id, con_desc, con_data, con_hora\n" +
+"	FROM public.consulta where fk_pac_id IS NOT NULL AND con_data > now()");
+
+        while (resultado.next()) {
+
+            a = new Attendance();
+     
+            a.setAttendanceId(resultado.getInt("con_id"));
+            a.setAttendancePatientId(resultado.getInt("fk_pac_id"));
+            a.setAttendanceDocId(resultado.getInt("fk_med_id"));
+            a.setAttendanceDate(AppUtil.DateFormat(resultado.getDate("con_data")));
+            a.setAttendanceHour(resultado.getString("con_hora"));
+            ap.add(a);
+        }
+        return ap;
+    }
+     
+     public int InsertAppointment(Attendance a){
+         
+        try {
+                       
+            DbPostgre.instancia();
+            Connection con = DbPostgre.instancia().getConnection();
+            
+            pst = con.prepareStatement("INSERT INTO public.consulta(\n" +
+            "fk_pac_id, fk_med_id,con_data,con_hora)\n" +
+            "VALUES (?,?,CAST(? AS DATE),?)");
+            
+            pst.setInt(1, a.getAttendancePatientId());
+            pst.setInt(2, a.getAttendanceDocId());
+            pst.setString(3,a.getAttendanceDate());
+            pst.setString(4,a.getAttendanceHour());
+            pst.executeUpdate();
+            pst.close();
+            return 1;
+        } catch (SQLException ex) {
+            Logger.getLogger(AppointmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+     }
 
 }

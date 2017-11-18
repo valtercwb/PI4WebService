@@ -31,8 +31,17 @@ public class Patient {
     private boolean neoplasia;
     private boolean tromboembo;
     private boolean cardiopatia;
+    private String patientImage;
             
     public Patient() {
+    }
+
+    public String getPatientImage() {
+        return patientImage;
+    }
+
+    public void setPatientImage(String patientImage) {
+        this.patientImage = patientImage;
     }
 
     public int getPatientId() {

@@ -15,9 +15,19 @@ public class Appointment {
     private String appPatBloodPres;
     private String appPatUterusHeight;
     private String appBabyHeartBeat;
-    private String appPatImc;   
+    private String appPatImc; 
+    private String appHour; 
+    
  
     public Appointment() {
+    }
+
+    public String getAppHour() {
+        return appHour;
+    }
+
+    public void setAppHour(String appHour) {
+        this.appHour = appHour;
     }
 
     public int getAppointId() {

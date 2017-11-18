@@ -99,6 +99,7 @@ public class PatientDAO extends DAO {
             p.setPregnancyWeek(Math.ceil(resultado.getDouble("semana_gestacao")));
             p.setActive(resultado.getBoolean("pac_status"));
             p.setPatientAge(resultado.getInt("pac_idade"));
+            p.setPatientImage(resultado.getString("pac_foto"));
             
             pl.add(p);
         }
