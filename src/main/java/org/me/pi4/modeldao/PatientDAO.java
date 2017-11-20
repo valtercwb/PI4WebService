@@ -84,9 +84,9 @@ public class PatientDAO extends DAO {
 
         stm = con.createStatement();
         ResultSet resultado = stm.executeQuery(
-            "SELECT *,DATE_PART('year', now()) - DATE_PART('year', pac_nasc) as pac_idade,\n" 
-            +"TRUNC(DATE_PART('day', now() - pac_dum)/7) as semana_gestacao\n" 
-            +"FROM paciente");
+            "SELECT *,DATE_PART('year', now()) - DATE_PART('year', pac_nasc) as pac_idade, \n" +
+"            TRUNC(DATE_PART('day', now() - pac_dum)/7) as semana_gestacao\n" +
+"            FROM paciente order by pac_dum");
 
         while (resultado.next()) {
 

@@ -10,8 +10,26 @@ public class User {
     private String userName;
     private String userPassword;
     private int userType;
+    private String userImei;
+    private String userNetwork;
 
     public User() {
+    }
+
+    public String getUserImei() {
+        return userImei;
+    }
+
+    public void setUserImei(String userImei) {
+        this.userImei = userImei;
+    }
+
+    public String getUserNetwork() {
+        return userNetwork;
+    }
+
+    public void setUserNetwork(String userNetwork) {
+        this.userNetwork = userNetwork;
     }
 
     public int getUserId() {

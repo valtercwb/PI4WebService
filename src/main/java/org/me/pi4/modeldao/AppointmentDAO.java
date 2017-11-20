@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.me.pi4.database.DbConnection;
 import org.me.pi4.database.DbPostgre;
 import org.me.pi4.model.Appointment;
 import org.me.pi4.model.Attendance;
@@ -136,8 +135,8 @@ public class AppointmentDAO extends DAO {
         Statement stm = null;
 
         stm = con.createStatement();
-        ResultSet resultado = stm.executeQuery("SELECT con_id, fk_pac_id, fk_med_id, con_desc, con_data, con_hora\n" +
-"	FROM public.consulta where con_data > now();");
+        ResultSet resultado = stm.executeQuery("SELECT con_id, fk_pac_id, fk_med_id,con_data, con_hora\n" +
+        "FROM public.consulta where con_data > now() and fk_pac_id IS NULL order by con_data");
 
         while (resultado.next()) {
 
@@ -162,16 +161,19 @@ public class AppointmentDAO extends DAO {
         Statement stm = null;
 
         stm = con.createStatement();
-        ResultSet resultado = stm.executeQuery("SELECT con_id, fk_pac_id, fk_med_id, con_desc, con_data, con_hora\n" +
-"	FROM public.consulta where fk_pac_id IS NOT NULL AND con_data > now()");
+        ResultSet resultado = stm.executeQuery("SELECT a.con_id,b.pac_id, b.pac_nome,a.fk_med_id, c.med_nome, a.con_data, a.con_hora\n" +
+"FROM public.consulta a\n" +
+"Inner join public.paciente b On a.fk_pac_id = b.pac_id\n" +
+"Inner join public.medico c On a.fk_med_id = c.med_id\n" +
+"where a.fk_pac_id IS NOT NULL AND con_data > now() order by con_data");
 
         while (resultado.next()) {
 
             a = new Attendance();
      
             a.setAttendanceId(resultado.getInt("con_id"));
-            a.setAttendancePatientId(resultado.getInt("fk_pac_id"));
-            a.setAttendanceDocId(resultado.getInt("fk_med_id"));
+            a.setAttendancePatientName(resultado.getString("pac_nome"));          
+            a.setAttendanceDoctorName(resultado.getString("med_nome"));
             a.setAttendanceDate(AppUtil.DateFormat(resultado.getDate("con_data")));
             a.setAttendanceHour(resultado.getString("con_hora"));
             ap.add(a);
@@ -179,28 +181,51 @@ public class AppointmentDAO extends DAO {
         return ap;
     }
      
-     public int InsertAppointment(Attendance a){
+     public int UpdateAppointment(Attendance a){
          
         try {
                        
             DbPostgre.instancia();
             Connection con = DbPostgre.instancia().getConnection();
             
-            pst = con.prepareStatement("INSERT INTO public.consulta(\n" +
-            "fk_pac_id, fk_med_id,con_data,con_hora)\n" +
-            "VALUES (?,?,CAST(? AS DATE),?)");
-            
+            pst = con.prepareStatement("UPDATE public.consulta\n" +
+"	SET  fk_pac_id=?, fk_med_id=?, con_data=CAST(? AS DATE), con_hora=?\n" +
+"	WHERE con_id=?");
+            //"VALUES (?,?,CAST(? AS DATE),?)
             pst.setInt(1, a.getAttendancePatientId());
             pst.setInt(2, a.getAttendanceDocId());
             pst.setString(3,a.getAttendanceDate());
             pst.setString(4,a.getAttendanceHour());
+            pst.setInt(5,a.getAttendanceId());
             pst.executeUpdate();
             pst.close();
+             AppLog("Agendar Consulta",a.getAttendanceUser(),a.getAttendanceUserImei(),a.getAttendanceUserNet());
             return 1;
         } catch (SQLException ex) {
             Logger.getLogger(AppointmentDAO.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
         }
      }
+     
+     public void AppLog(String action,String nome ,String imei,String net) throws SQLException {
+
+            DbPostgre.instancia();
+            Connection con = DbPostgre.instancia().getConnection();
+            try {
+
+                pst = con.prepareStatement("INSERT INTO public.app_log(\n" +
+                "action_name, action_user, action_net, action_imei)\n" +
+                "VALUES (?, ?, ?, ?);");
+                pst.setString(1, action);
+                pst.setString(2, nome);
+                pst.setString(3, net);
+                pst.setString(4, imei);
+                pst.executeUpdate();
+                pst.close();
+
+            } catch (SQLException ex) {
+                
+            }
+    }
 
 }

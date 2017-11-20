@@ -32,24 +32,9 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public User Login (@HeaderParam("userLogin") String userLogin, @HeaderParam("userPass") String userPass) {
+    public User Login (@HeaderParam("userLogin") String userLogin, @HeaderParam("userPass") String userPass){
         
     User u = new UserDAO().AuthUserPostgre(userLogin, userPass);
     return u;
     }
-    
-//    @Context HttpHeaders headers;
-//    // ...
-//    protected boolean authenticate() {
-//        String header = headers.getRequestHeader("authorization").get(0);
-//        header = header.substring("Basic ".length());
-//        String[] creds = new String(header).split(":");
-//        String username = creds[0];
-//        String password = creds[1];
-//        
-//        UserDAO ud = new UserDAO();
-//      //  ud.autenticarSenha(username, password);
-//        
-//        return true;
-//    }
 }
